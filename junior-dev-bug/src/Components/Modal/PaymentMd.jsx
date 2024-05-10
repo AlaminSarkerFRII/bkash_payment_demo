@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import { Cancel, DeliveryBx2 } from "../../Assets";
 import { useGlobalCtx } from "../../Contexts/GlobalProvider";
 import Btn from "../Share/Btn";
@@ -10,36 +11,33 @@ const PaymentMd = ({ formValues }) => {
   const { toggleModal, totalPrice } = useGlobalCtx();
   const navigate = useNavigate();
 
-  console.log(totalPrice);
 
-  const handleKeepShopping = async () => {
-
-   await fetch(`http://localhost:9000/api/bkash/createPayment`, {
-        method: "POST",
+const handleKeepShopping = async () => {
+  try {
+    const response = await axios.post(
+      'http://localhost:9000/api/bkash/createPayment',
+      {
+        payerReference: formValues.phone,
+        totalPrice: totalPrice,
+        email: formValues.email,
+      },
+      {
         headers: {
-            "Content-Type": "application/json" 
+          'Content-Type': 'application/json',
+          Authorization: false,
         },
-        body: JSON.stringify({
-            payerReference: formValues.phone,
-            totalPrice: totalPrice,
-            email: formValues.email,
-        }),
-    })
-    .then((response) => {
-        console.log(response); 
-        return response.json();
-    })
-    .then((data) => {
-        // Process data here
-        console.log(data);
-    })
-    .catch((error) => {
-        console.log("Error:", error);
-    });
-    
+      }
+    );
 
-    toggleModal();
-  };
+    console.log(response.data); // Response data
+    navigate('/'); // Navigate to homepage
+  } catch (error) {
+    console.log('Error:', error);
+  }
+
+  toggleModal(); // Close modal
+};
+
 
   const getDate = (dayIncrement) => {
     if (!dayIncrement)

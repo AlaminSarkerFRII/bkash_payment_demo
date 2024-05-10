@@ -25,6 +25,7 @@ class BaseClass {
   async grantToken() {
     try {
       let url = this.baseUrl + '/token/grant';
+      // let url = this.baseUrl + 'tokenized/checkout/token/grant';
       let headers = {
         username: this.username,
         password: this.password,
@@ -40,7 +41,7 @@ class BaseClass {
         url, headers, data
       });
 
-      if (res?.statusCode === '200') {
+      if (res?.statusCode === '0000') {
         this.token = res?.id_token;
         this.tokenType = res?.token_type;
         this.refreshToken = res?.refresh_token;
